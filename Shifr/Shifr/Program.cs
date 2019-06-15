@@ -32,30 +32,99 @@ namespace Shifr
         {
             ColorMess.Yellow("\n Сколько в блоке символов (от 2 до 9): ");
             block = Input.Check(2, 9);
+            spisok = new int[block];
             Again:
-            ColorMess.Yellow("\n Введите порядок чередования символов в блоке из "+block+" (числа вводить одним числом(пример для блока из 4 символов: 3241)): ");
-            string temp = Convert.ToString(Input.Check(12, 987654321));
-            char[] c = temp.ToCharArray();
+            ColorMess.Yellow("\n Введите порядок чередования символов в блоке из "+block+" (числа вводить через пробел(пример для блока из 4 символов: 3 2 4 1)): ");
+            string temp = Console.ReadLine();
+            string[] c = temp.Split();
             bool ok = true;
-            for (int i = 0; i < c.Length - 1; i++)
+            for (int i = 0; i < block; i++)
             {
-                if (c[i] >= 1 && c[i] <= block)
+                try
                 {
-                    ok = true;
-                    spisok[i] = Convert.ToInt32(c[i]);
+                    if (Convert.ToInt32(c[i]) >= 1 && Convert.ToInt32(c[i]) <= block)
+                    {
+                        ok = true;
+                        spisok[i] = Convert.ToInt32(c[i]);
+                    }
+                    else
+                    {
+                        ok = false;
+                        break;
+                    }
                 }
-                else
+                catch(FormatException)
                 {
-                    ok = false;
-                    return;
+                    Console.Clear();
+                    ColorMess.Red("\n Некорректный ввод, попробуйте еще раз!\n");
+                    goto Again;
                 }
+                catch(IndexOutOfRangeException)
+                {
+                    Console.Clear();
+                    ColorMess.Red("\n Некорректный ввод, попробуйте еще раз!\n");
+                    goto Again;
+                }
+            }
+            for(int i = 0; i<block; i++)
+            {
+                try
+                {
+                    if (spisok[i] == spisok[i + 1])
+                    {
+                        ok = false;
+                        break;
+                    }
+                }
+                catch (IndexOutOfRangeException) { }
             }
             if(!ok)
             {
                 Console.Clear();
-                ColorMess.Red("\n В ваших числах есть число которое не входит в блок, попробуйте еще раз!");
+                ColorMess.Red("\n В ваших числах есть число которое не входит в блок или есть повторяющиеся числа, попробуйте еще раз!");
                 goto Again;
             }
+        }
+        private static string Encrypt(string stroka)
+        {
+            Rules();
+            Console.Clear();
+            char[] c = stroka.ToCharArray();
+            int kol;
+            if (c.Length % block == 0)
+            {
+                kol = c.Length / block;
+            }
+            else
+            {
+                kol = c.Length / block + 1;
+            }
+            string[] temp = new string[kol];
+            int z = 0;
+            for (int i = 0; i < kol; i++)
+            {
+                for (int j = 0; j < block; j++)
+                {
+                    try
+                    {
+                        temp[i] = temp[i] + c[z];
+                        z++;
+                    }
+                    catch(IndexOutOfRangeException)
+                    {
+                        temp[i] = temp[i] + " ";
+                        z++;
+                    }
+                }
+            }
+            stroka = null;
+            for(int i = 0; i<kol; i++)
+            {
+                char[] temp2 = temp[i].ToCharArray();
+                for (int j = 0; j < spisok.Length; j++)
+                    stroka = stroka + temp2[spisok[j]-1];
+            }
+            return stroka;
         }
         static void Main()
         {
@@ -74,6 +143,7 @@ namespace Shifr
                     if(stroka != null)
                     {
                         Console.Clear();
+                        stroka = Encrypt(stroka);
                         ColorMess.Green("\n Зашифровано\n");
                     }
                     else
