@@ -126,6 +126,48 @@ namespace Shifr
             }
             return stroka;
         }
+        private static string Decrypt(string stroka)
+        {
+            Rules();
+            Console.Clear();
+            char[] c = stroka.ToCharArray();
+            int kol;
+            if (c.Length % block == 0)
+            {
+                kol = c.Length / block;
+            }
+            else
+            {
+                kol = c.Length / block + 1;
+            }
+            string[] temp = new string[kol];
+            int z = 0;
+            for (int i = 0; i < kol; i++)
+            {
+                for (int j = 0; j < block; j++)
+                {
+                    try
+                    {
+                        temp[i] = temp[i] + c[z];
+                        z++;
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        temp[i] = temp[i] + " ";
+                        z++;
+                    }
+                }
+            }
+            Array.Reverse(spisok); 
+            stroka = null;
+            for (int i = 0; i < kol; i++)
+            {
+                char[] temp2 = temp[i].ToCharArray();
+                for (int j = 0; j < spisok.Length; j++)
+                    stroka = stroka + temp2[spisok[j] - 1];
+            }
+            return stroka;
+        }
         static void Main()
         {
             string stroka = null;
@@ -156,6 +198,7 @@ namespace Shifr
                     if (stroka != null)
                     {
                         Console.Clear();
+                        stroka = Decrypt(stroka);
                         ColorMess.Green("\n Расшифровано\n");
                     }
                     else
