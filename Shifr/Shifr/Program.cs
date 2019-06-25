@@ -34,18 +34,21 @@ namespace Shifr
             block = Input.Check(2, 9);
             spisok = new int[block];
             Again:
-            ColorMess.Yellow("\n Введите порядок чередования символов в блоке из "+block+" (числа вводить через пробел(пример для блока из 4 символов: 3 2 4 1)): ");
+            ColorMess.Yellow("\n Введите порядок чередования символов в блоке из "+block+" (пример для блока из 4 символов: 3241): ");
             string temp = Console.ReadLine();
-            string[] c = temp.Split();
+            char[] c = temp.ToCharArray();
             bool ok = true;
             for (int i = 0; i < block; i++)
             {
                 try
                 {
-                    if (Convert.ToInt32(c[i]) >= 1 && Convert.ToInt32(c[i]) <= block)
+                    string str = "";
+                    str = str + c[i];
+                    int num = Convert.ToInt32(str);
+                    if (Convert.ToInt32(num) >= 1 && Convert.ToInt32(num) <= block)
                     {
                         ok = true;
-                        spisok[i] = Convert.ToInt32(c[i]);
+                        spisok[i] = num;
                     }
                     else
                     {
@@ -118,11 +121,21 @@ namespace Shifr
                 }
             }
             stroka = null;
-            for(int i = 0; i<kol; i++)
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            for (int i = 0; i < block; i++)
+            {
+                dic.Add(spisok[i],(i+1));
+            }
+            int[] key = new int[block];
+            for (int i = 0; i < block; i++)
+            {
+                key[i] = dic[i+1];
+            }
+            for (int i = 0; i<kol; i++)
             {
                 char[] temp2 = temp[i].ToCharArray();
-                for (int j = 0; j < spisok.Length; j++)
-                    stroka = stroka + temp2[spisok[j]-1];
+                for (int j = 0; j < key.Length; j++)
+                    stroka = stroka + temp2[key[j]-1];
             }
             return stroka;
         }
@@ -158,7 +171,6 @@ namespace Shifr
                     }
                 }
             }
-            Array.Reverse(spisok); 
             stroka = null;
             for (int i = 0; i < kol; i++)
             {
