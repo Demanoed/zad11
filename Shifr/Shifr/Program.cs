@@ -9,8 +9,11 @@ namespace Shifr
 {
     class Program
     {
+        #region Длинна блока и список для хранения ключа
         private static int block;
         private static int[] spisok;
+        #endregion
+        #region Печатает меню
         private static int Menu()
         {
             ColorMess.Yellow("\n Выберите пункт меню");
@@ -22,12 +25,16 @@ namespace Shifr
             ColorMess.Green("\n\n Цифра: ");
             return Input.Check(1, 5);
         }
+        #endregion
+        #region Создает текст
         private static string CreateText()
         {
             ColorMess.Yellow("\n Введите текст (разрешен русский алфавит + знаки препинания): ");
             string temp = Input.SymbolRu();
             return temp;
         }
+        #endregion
+        #region Правила для шифрования или расшифровывания
         private static void Rules()
         {
             ColorMess.Yellow("\n Сколько в блоке символов (от 2 до 9): ");
@@ -88,6 +95,8 @@ namespace Shifr
                 goto Again;
             }
         }
+        #endregion
+        #region Для зашифровки текста. Принимает строку для обработки
         private static string Encrypt(string stroka)
         {
             Rules();
@@ -139,6 +148,8 @@ namespace Shifr
             }
             return stroka;
         }
+        #endregion
+        #region Для расшифровки текста. Принимает строку для расшифровки
         private static string Decrypt(string stroka)
         {
             Rules();
@@ -180,6 +191,8 @@ namespace Shifr
             }
             return stroka;
         }
+        #endregion
+        #region Запрашивает у пользователя данные, печатает меню с выбором операции, выводит результат обработки
         static void Main()
         {
             string stroka = null;
@@ -235,5 +248,6 @@ namespace Shifr
                     break;
             }
         }
+        #endregion
     }
 }
